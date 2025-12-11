@@ -4,12 +4,12 @@ In this challenge, you will complete a partially implemented text-processing too
 
 ---
 
-## 📌 Scenario
+## Scenario
 
 Codesafe has received a prototype text utility built to help developers process user-supplied text (reverse words, check palindromes, convert lists, etc.).  
 However:
 
-### ⚠️ The prototype contains a **command injection vulnerability**  
+### The prototype contains a **command injection vulnerability**  
 A malicious user could inject shell commands and potentially read sensitive files (like `/flag`).  
 Your task is to complete the missing program logic **and** secure the system.
 
