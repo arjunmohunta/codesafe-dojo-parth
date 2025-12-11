@@ -2,11 +2,12 @@ id: example
 name: Example Dojo
 type: example
 image: pwncollege/challenge-legacy:latest
+
 modules:
   - id: platform-tutorial
     name: Platform Tutorial
     description: >
-      Start here! This will be a tutorial on how to use this platform and start working on the chlalenges. We highly recommend completing the tutorial challenges in order.
+      Start here! This will be a tutorial on how to use this platform and start working on the challenges. We highly recommend completing the tutorial challenges in order.
     challenges:
       - id: start-here
         name: Start Here
@@ -14,6 +15,8 @@ modules:
         name: Format of Challenges
       - id: saving-files
         name: Saving Files in the Environment
+      - id: secure-command-runner
+        name: Secure Command Runner
   
   - id: hello
   - id: world
