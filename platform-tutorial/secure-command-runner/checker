@@ -10,30 +10,58 @@ def run(cmd):
     except subprocess.CalledProcessError as e:
         return e.output.strip()
 
+def test_reverse():
+    out = run(["python3", "modify_me.py", "reverse", "hello"])
+    return out == "olleh"
+
+def test_palindrome_true():
+    out = run(["python3", "modify_me.py", "palindrome", "Level"])
+    return out == "True"
+
+def test_palindrome_false():
+    out = run(["python3", "modify_me.py", "palindrome", "world"])
+    return out == "False"
+
+def test_upperlist():
+    out = run(["python3", "modify_me.py", "upperlist", "a,b,c"])
+    return out == "A,B,C"
+
+def test_lowerlist():
+    out = run(["python3", "modify_me.py", "lowerlist", "A,B,C"])
+    return out == "a,b,c"
+
+
 def test_safe_input():
-    out = run(["python3", "modify_me.py", "hello"])
+    out = run(["python3", "modify_me.py", "process", "hello"])
     return out == "Processed: hello"
 
 def test_injection_blocked():
-    out = run(["python3", "modify_me.py", "hello; cat /flag"])
+    out = run(["python3", "modify_me.py", "process", "hello; cat /flag"])
     return out.lower().startswith("invalid")
 
 def test_no_flag_leak():
-    out = run(["python3", "modify_me.py", "hello; cat /flag"])
+    out = run(["python3", "modify_me.py", "process", "hello; cat /flag"])
     if os.path.exists("/flag"):
         with open("/flag", "r") as f:
             flag = f.read().strip()
         return flag not in out
-    return True
+    return True  # If no /flag exists, skip
+
 
 def main():
     tests = [
+        ("Reverse string works", test_reverse),
+        ("Palindrome true works", test_palindrome_true),
+        ("Palindrome false works", test_palindrome_false),
+        ("Uppercase list works", test_upperlist),
+        ("Lowercase list works", test_lowerlist),
         ("Safe input works", test_safe_input),
         ("Injection attempt blocked", test_injection_blocked),
         ("Flag not leaked", test_no_flag_leak),
     ]
 
     all_passed = True
+
     for name, fn in tests:
         result = fn()
         print(f"{name}: {'PASS' if result else 'FAIL'}")
@@ -48,4 +76,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
