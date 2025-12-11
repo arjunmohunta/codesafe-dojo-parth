@@ -1,1 +1,51 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+import os
+
+def run(cmd):
+    try:
+        out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True)
+        return out.strip()
+    except subprocess.CalledProcessError as e:
+        return e.output.strip()
+
+def test_safe_input():
+    out = run(["python3", "modify_me.py", "hello"])
+    return out == "Processed: hello"
+
+def test_injection_blocked():
+    out = run(["python3", "modify_me.py", "hello; cat /flag"])
+    return out.lower().startswith("invalid")
+
+def test_no_flag_leak():
+    out = run(["python3", "modify_me.py", "hello; cat /flag"])
+    if os.path.exists("/flag"):
+        with open("/flag", "r") as f:
+            flag = f.read().strip()
+        return flag not in out
+    return True
+
+def main():
+    tests = [
+        ("Safe input works", test_safe_input),
+        ("Injection attempt blocked", test_injection_blocked),
+        ("Flag not leaked", test_no_flag_leak),
+    ]
+
+    all_passed = True
+    for name, fn in tests:
+        result = fn()
+        print(f"{name}: {'PASS' if result else 'FAIL'}")
+        if not result:
+            all_passed = False
+
+    if all_passed:
+        with open("/flag", "r") as f:
+            print(f.read())
+    else:
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
 
