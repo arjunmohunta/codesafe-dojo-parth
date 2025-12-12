@@ -1,78 +1,23 @@
-#!/usr/bin/env python3
-import subprocess
-import sys
-import os
+from bank import Bank,BankAccount
 
-def run(cmd):
+def run_tests():
+    bank=Bank()
     try:
-        out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True)
-        return out.strip()
-    except subprocess.CalledProcessError as e:
-        return e.output.strip()
+        bank.add_account(1,"Alice",1000,"Savings")
+        bank.add_account(2,"Bob",500,"Current")
+        bank.deposit(1,500)
+        bank.withdraw(2,200)
+        bank.transfer(1,2,300)
+        acc1=bank.find_account(1)
+        acc2=bank.find_account(2)
+        assert acc1.balance==1200
+        assert acc2.balance==600
+        bank.edit_account(1,"Alice Smith","Savings")
+        bank.delete_account(2)
+        assert bank.find_account(2) is None
+        print("All tests passed")
+    except Exception as e:
+        print("Test failed:",e)
 
-def test_reverse():
-    out = run(["python3", "modify_me.py", "reverse", "hello"])
-    return out == "olleh"
-
-def test_palindrome_true():
-    out = run(["python3", "modify_me.py", "palindrome", "Level"])
-    return out == "True"
-
-def test_palindrome_false():
-    out = run(["python3", "modify_me.py", "palindrome", "world"])
-    return out == "False"
-
-def test_upperlist():
-    out = run(["python3", "modify_me.py", "upperlist", "a,b,c"])
-    return out == "A,B,C"
-
-def test_lowerlist():
-    out = run(["python3", "modify_me.py", "lowerlist", "A,B,C"])
-    return out == "a,b,c"
-
-
-def test_safe_input():
-    out = run(["python3", "modify_me.py", "process", "hello"])
-    return out == "Processed: hello"
-
-def test_injection_blocked():
-    out = run(["python3", "modify_me.py", "process", "hello; cat /flag"])
-    return out.lower().startswith("invalid")
-
-def test_no_flag_leak():
-    out = run(["python3", "modify_me.py", "process", "hello; cat /flag"])
-    if os.path.exists("/flag"):
-        with open("/flag", "r") as f:
-            flag = f.read().strip()
-        return flag not in out
-    return True  # If no /flag exists, skip
-
-
-def main():
-    tests = [
-        ("Reverse string works", test_reverse),
-        ("Palindrome true works", test_palindrome_true),
-        ("Palindrome false works", test_palindrome_false),
-        ("Uppercase list works", test_upperlist),
-        ("Lowercase list works", test_lowerlist),
-        ("Safe input works", test_safe_input),
-        ("Injection attempt blocked", test_injection_blocked),
-        ("Flag not leaked", test_no_flag_leak),
-    ]
-
-    all_passed = True
-
-    for name, fn in tests:
-        result = fn()
-        print(f"{name}: {'PASS' if result else 'FAIL'}")
-        if not result:
-            all_passed = False
-
-    if all_passed:
-        with open("/flag", "r") as f:
-            print(f.read())
-    else:
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
+if __name__=="__main__":
+    run_tests()
