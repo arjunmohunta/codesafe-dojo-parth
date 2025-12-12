@@ -1,110 +1,128 @@
-#!/usr/bin/env python3
-import sys
-def reverse_string(text):
-    return "TODO"
-def is_palindrome(text):
-    return "TODO"
-def to_upper(text):
-    return "TODO"
-def to_lower(text):
-    return "TODO"
-def normalize_text(text):
-    lowered = to_lower(text)
-    return lowered
-def analyze_text(text):
-    rev = reverse_string(text)
-    pal = is_palindrome(text)
-    return rev + " | " + str(pal)
-def split_items(raw):
-    return raw.split(",")
-def join_items(items):
-    return ",".join(items)
-def transform_list(raw):
-    parts = split_items(raw)
-    out = []
-    for p in parts:
-        if len(p)%2==0:
-            out.append(to_upper(p))
+class BankAccount:
+    def __init__(self,acc_no,name,balance,acc_type):
+        self.acc_no=acc_no
+        self.name=name
+        self.balance=balance
+        self.acc_type=acc_type
+    def update_name(self,new_name):
+        self.name=new_name
+    def update_type(self,new_type):
+        self.acc_type=new_type
+    def credit(self,amount):
+        self.balance+=amount
+    def debit(self,amount):
+        self.balance-=amount
+class Bank:
+    def __init__(self):
+        self.accounts=[]
+    def find_account(self,acc_no):
+        for acc in self.accounts:
+            if acc.acc_no==acc_no:
+                return acc
+        return None
+    def add_account(self,acc_no,name,balance,acc_type):
+        pass
+    def edit_account(self,acc_no,new_name,new_type):
+        pass
+    def delete_account(self,acc_no):
+        pass
+    def deposit(self,acc_no,amount):
+        pass
+    def withdraw(self,acc_no,amount):
+        pass
+    def transfer(self,from_acc,to_acc,amount):
+        pass
+    def get_all_accounts(self):
+        return self.accounts
+    def account_exists(self,acc_no):
+        return self.find_account(acc_no) is not None
+class InputHandler:
+    def read_int(self):
+        return int(input())
+    def read_float(self):
+        return float(input())
+    def read_string(self):
+        return input()
+class BankUI:
+    def __init__(self,bank):
+        self.bank=bank
+        self.input=InputHandler()
+    def print_menu(self):
+        print("1 Create Account")
+        print("2 Edit Account")
+        print("3 Delete Account")
+        print("4 Deposit")
+        print("5 Withdraw")
+        print("6 Transfer")
+        print("7 Display One Account")
+        print("8 Display All Accounts")
+        print("9 Exit")
+    def create_account(self):
+        acc_no=self.input.read_int()
+        name=self.input.read_string()
+        balance=self.input.read_float()
+        acc_type=self.input.read_string()
+        self.bank.add_account(acc_no,name,balance,acc_type)
+    def edit_account(self):
+        acc_no=self.input.read_int()
+        name=self.input.read_string()
+        acc_type=self.input.read_string()
+        self.bank.edit_account(acc_no,name,acc_type)
+    def delete_account(self):
+        acc_no=self.input.read_int()
+        self.bank.delete_account(acc_no)
+    def deposit(self):
+        acc_no=self.input.read_int()
+        amount=self.input.read_float()
+        self.bank.deposit(acc_no,amount)
+    def withdraw(self):
+        acc_no=self.input.read_int()
+        amount=self.input.read_float()
+        self.bank.withdraw(acc_no,amount)
+    def transfer(self):
+        from_acc=self.input.read_int()
+        to_acc=self.input.read_int()
+        amount=self.input.read_float()
+        self.bank.transfer(from_acc,to_acc,amount)
+    def display_one(self):
+        acc_no=self.input.read_int()
+        acc=self.bank.find_account(acc_no)
+        if acc:
+            print(acc.acc_no,acc.name,acc.balance,acc.acc_type)
         else:
-            out.append(to_lower(p))
-    return join_items(out)
-def contains_forbidden(text):
-    bad=[";","|","&","$","`",">","<","(",")","{","}","&&","||","$("]
-    for b in bad:
-        if b in text:
-            return True
-    return False
-def validate(text):
-    return not contains_forbidden(text)
-def summarize_text(text):
-    n = normalize_text(text)
-    a = analyze_text(n)
-    return a
-def list_statistics(raw):
-    items = split_items(raw)
-    transformed = transform_list(raw)
-    return str(len(items)) + " | " + transformed
-def compare_texts(a,b):
-    ra = reverse_string(a)
-    rb = reverse_string(b)
-    pa = is_palindrome(a)
-    pb = is_palindrome(b)
-    return ra + ":" + rb + ":" + str(pa) + ":" + str(pb)
-def alternating_format(text):
-    result = ""
-    for i,ch in enumerate(text):
-        if i%2==0:
-            result += to_upper(ch)
-        else:
-            result += to_lower(ch)
-    return result
-def process_text(text):
-    n = normalize_text(text)
-    a = analyze_text(n)
-    alt = alternating_format(n)
-    return a + " | " + alt
-def pipeline_stage_one(text):
-    return to_lower(reverse_string(text))
-def pipeline_stage_two(text):
-    return reverse_string(to_upper(text))
-def pipeline_stage_three(text):
-    return alternating_format(text)
-def full_pipeline(text):
-    s1 = pipeline_stage_one(text)
-    s2 = pipeline_stage_two(text)
-    s3 = pipeline_stage_three(text)
-    return s1 + " | " + s2 + " | " + s3
-def router(cmd,text):
-    if cmd=="reverse":return reverse_string(text)
-    if cmd=="palindrome":return str(is_palindrome(text))
-    if cmd=="upper":return to_upper(text)
-    if cmd=="lower":return to_lower(text)
-    if cmd=="analyze":return analyze_text(text)
-    if cmd=="normalize":return normalize_text(text)
-    if cmd=="list":return transform_list(text)
-    if cmd=="summary":return summarize_text(text)
-    if cmd=="stats":return list_statistics(text)
-    if cmd=="compare":
-        parts=text.split(" ")
-        if len(parts)<2:
-            return "Need two strings"
-        return compare_texts(parts[0],parts[1])
-    if cmd=="alt":return alternating_format(text)
-    if cmd=="process":return process_text(text)
-    if cmd=="pipe":return full_pipeline(text)
-    return "Invalid command"
-def usage():
-    print("Usage: python3 modify_me.py <command> <text>")
+            print("Account not found")
+    def display_all(self):
+        accounts=self.bank.get_all_accounts()
+        if not accounts:
+            print("No accounts")
+        for acc in accounts:
+            print(acc.acc_no,acc.name,acc.balance,acc.acc_type)
+    def run(self):
+        while True:
+            self.print_menu()
+            choice=input()
+            if choice=="1":
+                self.create_account()
+            elif choice=="2":
+                self.edit_account()
+            elif choice=="3":
+                self.delete_account()
+            elif choice=="4":
+                self.deposit()
+            elif choice=="5":
+                self.withdraw()
+            elif choice=="6":
+                self.transfer()
+            elif choice=="7":
+                self.display_one()
+            elif choice=="8":
+                self.display_all()
+            elif choice=="9":
+                break
+            else:
+                print("Invalid choice")
 def main():
-    if len(sys.argv)<3:
-        usage()
-        return
-    cmd=sys.argv[1]
-    text=" ".join(sys.argv[2:])
-    if not validate(text):
-        print("Invalid input")
-        return
-    out=router(cmd,text)
-    print(out)
-if __name__=="__main__":
-    main()
+    bank=Bank()
+    ui=BankUI(bank)
+    ui.run()
+main()
