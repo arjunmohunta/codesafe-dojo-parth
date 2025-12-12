@@ -1,40 +1,56 @@
-# Secure Text Utility Challenge
+# Bank Account Management System
 
-In this challenge, you will complete a partially implemented text-processing tool and secure it against command injection attacks. The goal is to learn basic software engineering practices, implement small transformations, and fix a real security vulnerability — all while preserving the original intended behavior.
+## Objective
+Implement a console-based bank account management system that allows users to create and manage bank accounts.
 
----
+## Account Details
+Each bank account has:
+- Account Number (unique integer)
+- Account Holder Name (string)
+- Balance (float)
+- Account Type (string)
 
-## Scenario
+## Functional Requirements
+You must implement the following operations:
 
-Codesafe has received a prototype text utility built to help developers process user-supplied text (reverse words, check palindromes, convert lists, etc.).  
-However:
+1. Add Account
+   - Account number must be unique
+   - Initial balance must be non-negative
 
-### The prototype contains a **command injection vulnerability**  
-A malicious user could inject shell commands and potentially read sensitive files (like `/flag`).  
-Your task is to complete the missing program logic **and** secure the system.
+2. Edit Account
+   - Update account holder name
+   - Update account type
+   - Account must exist
 
----
+3. Delete Account
+   - Remove account permanently
+   - Account must exist
 
-## What You Must Do
+4. Deposit Money
+   - Amount must be positive
+   - Account must exist
 
-You are given a starter Python file: `modify_me.py`  
-You must complete the following tasks:
+5. Withdraw Money
+   - Amount must be positive
+   - Balance must not go negative
+   - Account must exist
 
-### **Task 1 — Implement the missing text-processing functions**
-You must write correct implementations for:
-- `reverse_string`
-- `is_palindrome`
-- `to_upper_list`
-- `to_lower_list`
+6. Transfer Money
+   - Both accounts must exist
+   - Amount must be positive
+   - Sender must have sufficient balance
 
-### **Task 2 — Block malicious input**
-You must complete the `is_malicious(text)` function so that it detects and rejects shell-injection attempts.
+7. Display Accounts
+   - Show all stored accounts
 
-### **Task 3 — Fix the security vulnerability**
-The current `process_text()` function improperly invokes a shell command.  
-You must rewrite it so it:
+## Constraints
+- Do not use external libraries
+- Store accounts in memory
+- Follow object-oriented design
+- Modify only the TODO (empty) methods
 
-- Does **not** use `os.system`
-- Does **not** use `shell=True`
-- Does **not** allow shell execution at all  
-- Always correctly returns:  
+## Expected Skills
+- Classes and objects
+- Lists
+- Control flow
+- Input validation
